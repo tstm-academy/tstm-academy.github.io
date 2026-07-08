@@ -42,6 +42,31 @@
             font-style: italic;
             color: #6c757d;
         }
+
+        .audio-row {
+            display: flex;
+            flex-direction: column;
+            /* Forces the player to the next line */
+            align-items: flex-start;
+            /* Aligns both elements neatly to the left */
+            margin-bottom: 18px;
+            /* Adds breathing room before the next track block */
+        }
+
+        .audio-track-label {
+            font-size: 0.9rem;
+            color: #4a5568;
+            font-weight: 500;
+            margin-bottom: 6px;
+            /* Adds a clean gap between text and its player */
+        }
+
+        .audio-row audio {
+            width: 100%;
+            max-width: 400px;
+            /* Limits the width so it looks great on desktop */
+            height: 40px;
+        }
     </style>
 </head>
 

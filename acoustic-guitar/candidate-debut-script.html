@@ -68,6 +68,8 @@
             height: 40px;
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/@coderline/alphatab@1.3.0/dist/alphaTab.js"></script>
 </head>
 
 <body>
@@ -261,6 +263,10 @@
                         <audio controls src="../audio/technical-exercises/Debut/acoustic_riff_full.mp3"></audio>
                     </div>
                 </div>
+                <div class="tab-wrapper">
+                    <h5>🎼 Acoustic Riff Score & Tabs:</h5>
+                    <div id="alphaTab-riff" data-file="../scores/technical-exercises/te_acoustic_riff.musicxml"></div>
+                </div>
             </div>
         </div>
 
@@ -271,6 +277,26 @@
             <p class="dialogue">Candidate: "Thank you. That concludes my exam."</p>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Target the riff div container
+            const element = document.querySelector('#alphaTab-riff');
+
+            // Initialize alphaTab as a static visual layout
+            new alphaTab.AlphaTabApi(element, {
+                player: null, // Disables all playback engine conflicts
+                display: {
+                    layoutMode: 'page', // Wraps measures beautifully across mobile rows
+                    stretchForce: 1,    // Spreads columns evenly to match container width
+                    resources: {
+                        // Dynamically pulls the music font symbols
+                        notationFont: 'https://cdn.jsdelivr.net/npm/@coderline/alphatab@1.3.0/dist/font/alphaTab.woff'
+                    }
+                }
+            });
+        });
+    </script>
 
 </body>
 

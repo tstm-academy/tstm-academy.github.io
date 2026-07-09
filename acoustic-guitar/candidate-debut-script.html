@@ -5,10 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acoustic Guitar Debut Script & Guidelines</title>
-    <!-- xmlplay depends on abc2svg engines for rendering classical staffs -->
-    <script src="https://wim.vree.org/js3/abc2svg-1.js"></script>
-    <script src="https://wim.vree.org/js3/xml2abc.js"></script>
-    <!-- <script src="https://wim.vree.org/js3/xmlplay.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/opensheetmusicdisplay/build/opensheetmusicdisplay.min.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -267,9 +264,8 @@
                 </div>
                 <!-- GROUP C: RIFF VISUAL PANEL -->
                 <div class="experimental-notation-panel">
-                    <h5>🎼 Acoustic Riff Score:</h5>
-                    <!-- Clean, direct rendering target -->
-                    <div id="notation-target"></div>
+                    <h5>🎼 Acoustic Riff Score (Standard Notation):</h5>
+                    <div id="osmd-target"></div>
                 </div>
             </div>
         </div>
@@ -284,45 +280,24 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 1. Configure the MusicXML to ABC converter options
-            var xmlOptions = {
-                u: 0, // Ignore lyrics formatting
-                b: 0, // Clean line breaks
-                m: 0  // No extra margins
-            };
+            // 1. Target your container
+            var targetDiv = document.getElementById("osmd-target");
 
-            // 2. Fetch directly from your root scores directory
-            fetch('https://tstm-academy.github.io/scores/debut_te_acoustic_riff.musicxml')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.statusText);
-                    }
-                    return response.text();
+            // 2. Initialize the OSMD drawing engine
+            var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(targetDiv, {
+                drawingParameters: "compacttight", // Compresses margins for mobile screens
+                drawTitle: false,                  // Hides the embedded MuseScore title for a cleaner UI
+                drawCredits: false                 // Hides subtitle/composer metadata
+            });
+
+            // 3. Load your live MusicXML URL and draw it
+            osmd.load("https://tstm-academy.github.io/scores/debut_te_acoustic_riff.musicxml")
+                .then(function () {
+                    osmd.render();
                 })
-                .then(xmlText => {
-                    // Translate MusicXML string to pure ABC notation string
-                    var abcResult = xml2abc.translate(xmlText, xmlOptions);
-
-                    // 3. Configure the abc2svg vector renderer targeting your div
-                    var svgTarget = document.getElementById('notation-target');
-
-                    var abcEngine = {
-                        img_out: function (svgText) {
-                            // Append each rendered line of music directly into your div layout
-                            svgTarget.innerHTML += svgText;
-                        },
-                        errmsg: function (msg) {
-                            console.error("abc2svg rendering issue: ", msg);
-                        }
-                    };
-
-                    // Initialize the drawing engine instance
-                    var renderer = new abc2svg.Abc(abcEngine);
-
-                    // Parse and draw the music symbols cleanly
-                    renderer.each_block(abcResult);
-                })
-                .catch(err => console.error("Error loading or rendering XML:", err));
+                .catch(function (err) {
+                    console.error("Error drawing the score with OSMD: ", err);
+                });
         });
     </script>
 </body>

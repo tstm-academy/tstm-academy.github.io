@@ -8,7 +8,7 @@
     <!-- xmlplay depends on abc2svg engines for rendering classical staffs -->
     <script src="https://wim.vree.org/js3/abc2svg-1.js"></script>
     <script src="https://wim.vree.org/js3/xml2abc.js"></script>
-    <script src="https://wim.vree.org/js3/xmlplay.js"></script>
+    <!-- <script src="https://wim.vree.org/js3/xmlplay.js"></script> -->
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -268,11 +268,7 @@
                 <!-- GROUP C: RIFF VISUAL PANEL -->
                 <div class="experimental-notation-panel">
                     <h5>🎼 Acoustic Riff Score:</h5>
-
-                    <!-- The script binds elements here. We keep them empty/hidden since you use your own audio -->
-                    <div id="playdiv" style="display: none;"></div>
-
-                    <!-- This is the absolute target container where the vector lines render -->
+                    <!-- Clean, direct rendering target -->
                     <div id="notation-target"></div>
                 </div>
             </div>
@@ -288,25 +284,45 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Fetch your local MuseScore MusicXML export
-            fetch('../scores/debut_te_acoustic_riff.musicxml')
-                .then(response => response.text())
+            // 1. Configure the MusicXML to ABC converter options
+            var xmlOptions = {
+                u: 0, // Ignore lyrics formatting
+                b: 0, // Clean line breaks
+                m: 0  // No extra margins
+            };
+
+            // 2. Fetch directly from your root scores directory
+            fetch('https://tstm-academy.github.io/scores/debut_te_acoustic_riff.musicxml')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.statusText);
+                    }
+                    return response.text();
+                })
                 .then(xmlText => {
-                    // 1. Configure the script layout options 
-                    // We pass 'playdiv' to satisfy the internal addEventListener calls safely
-                    var xmlplay_config = {
-                        id: 'notation-target',
-                        playif: 'playdiv',
-                        skipFrames: true
+                    // Translate MusicXML string to pure ABC notation string
+                    var abcResult = xml2abc.translate(xmlText, xmlOptions);
+
+                    // 3. Configure the abc2svg vector renderer targeting your div
+                    var svgTarget = document.getElementById('notation-target');
+
+                    var abcEngine = {
+                        img_out: function (svgText) {
+                            // Append each rendered line of music directly into your div layout
+                            svgTarget.innerHTML += svgText;
+                        },
+                        errmsg: function (msg) {
+                            console.error("abc2svg rendering issue: ", msg);
+                        }
                     };
 
-                    // 2. Initialize using the correct lowercase constructor name
-                    var viewer = xmlplay(xmlplay_config);
+                    // Initialize the drawing engine instance
+                    var renderer = new abc2svg.Abc(abcEngine);
 
-                    // 3. Load and render the score graphics
-                    viewer.load(xmlText);
+                    // Parse and draw the music symbols cleanly
+                    renderer.each_block(abcResult);
                 })
-                .catch(err => console.error("Error loading XML into xmlplay:", err));
+                .catch(err => console.error("Error loading or rendering XML:", err));
         });
     </script>
 </body>

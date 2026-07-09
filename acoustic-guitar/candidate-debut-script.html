@@ -265,9 +265,14 @@
                         <audio controls src="../audio/technical-exercises/Debut/acoustic_riff_full.mp3"></audio>
                     </div>
                 </div>
+                <!-- GROUP C: RIFF VISUAL PANEL -->
                 <div class="experimental-notation-panel">
-                    <h5>Acoustic Riff Tab/Score</h5>
-                    <!-- Container where the script will paint the vector sheets -->
+                    <h5>🎼 Acoustic Riff Score:</h5>
+
+                    <!-- The script binds elements here. We keep them empty/hidden since you use your own audio -->
+                    <div id="playdiv" style="display: none;"></div>
+
+                    <!-- This is the absolute target container where the vector lines render -->
                     <div id="notation-target"></div>
                 </div>
             </div>
@@ -287,9 +292,18 @@
             fetch('../scores/debut/technical-exercises/te_acoustic_riff.musicxml')
                 .then(response => response.text())
                 .then(xmlText => {
-                    // xmlplay uses an initialization framework to transform text into clean SVG nodes
-                    // Target the div ID and pass the XML data array
-                    const viewer = new XmlPlay('notation-target');
+                    // 1. Configure the script layout options 
+                    // We pass 'playdiv' to satisfy the internal addEventListener calls safely
+                    var xmlplay_config = {
+                        id: 'notation-target',
+                        playif: 'playdiv',
+                        skipFrames: true
+                    };
+
+                    // 2. Initialize using the correct lowercase constructor name
+                    var viewer = xmlplay(xmlplay_config);
+
+                    // 3. Load and render the score graphics
                     viewer.load(xmlText);
                 })
                 .catch(err => console.error("Error loading XML into xmlplay:", err));

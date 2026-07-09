@@ -284,17 +284,20 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Target the riff div container
             const element = document.querySelector('#alphaTab-riff');
 
-            // Initialize alphaTab as a static visual layout
             new alphaTab.AlphaTabApi(element, {
-                player: null, // Disables all playback engine conflicts
+                player: null, // Keeps it strictly visual
+                engine: 'svg', // Explicitly forces SVG rendering vectors
                 display: {
-                    layoutMode: 'page', // Wraps measures beautifully across mobile rows
-                    stretchForce: 1,    // Spreads columns evenly to match container width
+                    layoutMode: 'page',
+                    stretchForce: 1,
+                    // Tells the engine to focus on both Standard Sheet Music AND Tablature lines
+                    notationElements: {
+                        notation: true,
+                        tablature: true
+                    },
                     resources: {
-                        // Dynamically pulls the music font symbols
                         notationFont: 'https://cdn.jsdelivr.net/npm/@coderline/alphatab@1.3.0/dist/font/alphaTab.woff'
                     }
                 }

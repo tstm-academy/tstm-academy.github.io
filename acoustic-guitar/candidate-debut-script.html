@@ -105,7 +105,7 @@
         <!-- PART 1: PERFORMANCE PIECES -->
         <div class="script-section">
             <h3>Part 1: Performance Pieces</h3>
-            <p class="instruction">First, I will play the performance pieces:</p>
+            <p class="dialogue">First, I will play the performance pieces:</p>
 
             <!-- PIECE 1 -->
             <div class="piece-block">
@@ -194,13 +194,33 @@
             <div class="exercise-block">
                 <p class="dialogue">Candidate: "First is the C Major Scale."</p>
                 <p class="action">*(Plays the C Major scale with backing track)*</p>
+                <div class="experimental-notation-panel">
+                    <h5>🎼 C Major Scale Score (Standard Notation):</h5>
+                    <div id="osmd-target"></div>
+                    <div class="osmd-container"
+                        data-musicxml="https://tstm-academy.github.io/scores/debut_te_c_major_scale.musicxml">
+                    </div>
+                </div>
 
                 <p class="dialogue">Candidate: "Next is the E Minor Pentatonic Scale."</p>
                 <p class="action">*(Plays the E Minor Pentatonic Scale with backing track)*</p>
+                <div class="experimental-notation-panel">
+                    <h5>🎼 E Minor Pentatonic Scale (Standard Notation):</h5>
+                    <div id="osmd-target"></div>
+                    <div class="osmd-container"
+                        data-musicxml="https://tstm-academy.github.io/scores/debut_te_e_minor_pentatonic_scale.musicxml">
+                    </div>
+                </div>
 
                 <p class="dialogue">Candidate: "Next is the A Minor Pentatonic Scale."</p>
                 <p class="action">*(Plays the A Minor Pentatonic Scale with backing track)*</p>
-
+                <div class="experimental-notation-panel">
+                    <h5>🎼 A Minor Pentatonic Scale (Standard Notation):</h5>
+                    <div id="osmd-target"></div>
+                    <div class="osmd-container"
+                        data-musicxml="https://tstm-academy.github.io/scores/debut_te_a_minor_pentatonic_scale.musicxml">
+                    </div>
+                </div>
                 <!-- Scale Backing Audio Player Box -->
                 <div class="audio-embed-panel technical-panel">
                     <div class="audio-row">
@@ -266,6 +286,9 @@
                 <div class="experimental-notation-panel">
                     <h5>🎼 Acoustic Riff Score (Standard Notation):</h5>
                     <div id="osmd-target"></div>
+                    <div class="osmd-container"
+                        data-musicxml="https://tstm-academy.github.io/scores/debut_te_acoustic_riff.musicxml">
+                    </div>
                 </div>
             </div>
         </div>
@@ -280,24 +303,33 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 1. Target your container
-            var targetDiv = document.getElementById("osmd-target");
+            // 1. Find EVERY element on the page that has the class 'osmd-container'
+            const scoreContainers = document.querySelectorAll('.osmd-container');
 
-            // 2. Initialize the OSMD drawing engine
-            var osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(targetDiv, {
-                drawingParameters: "compacttight", // Compresses margins for mobile screens
-                drawTitle: false,                  // Hides the embedded MuseScore title for a cleaner UI
-                drawCredits: false                 // Hides subtitle/composer metadata
+            // 2. Loop through each container found
+            scoreContainers.forEach(container => {
+                // Get the unique URL assigned to this specific container
+                const xmlUrl = container.getAttribute('data-musicxml');
+
+                // If a URL exists, initialize OSMD for this block
+                if (xmlUrl) {
+                    const osmd = new opensheetmusicdisplay.OpenSheetMusicDisplay(container, {
+                        drawingParameters: "compacttight", // Great for mobile
+                        drawTitle: false,
+                        drawCredits: false
+                    });
+
+                    // Load the specific file and draw it
+                    osmd.load(xmlUrl)
+                        .then(function () {
+                            osmd.render();
+                        })
+                        .catch(function (err) {
+                            console.error("OSMD failed to load score: " + xmlUrl, err);
+                            container.innerHTML = "<p style='color:red;'>Failed to load sheet music.</p>";
+                        });
+                }
             });
-
-            // 3. Load your live MusicXML URL and draw it
-            osmd.load("https://tstm-academy.github.io/scores/debut_te_acoustic_riff.musicxml")
-                .then(function () {
-                    osmd.render();
-                })
-                .catch(function (err) {
-                    console.error("Error drawing the score with OSMD: ", err);
-                });
         });
     </script>
 </body>

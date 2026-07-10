@@ -329,14 +329,21 @@
                 // 1. Check the enabled status
                 const isEnabled = container.getAttribute('data-enabled');
 
-                // 2. If explicitly marked as false, hide the whole block and skip
+                // 2. If explicitly marked as false, handle hiding safely
                 if (isEnabled === 'false') {
-                    // Hides the parent div containing the <h5> title
-                    container.closest('.experimental-notation-panel').style.display = 'none';
-                    return; // Exit this loop iteration immediately
+                    const parentPanel = container.closest('.experimental-notation-panel');
+
+                    if (parentPanel) {
+                        // Hides the whole panel including the <h5> title if found
+                        parentPanel.style.display = 'none';
+                    } else {
+                        // Fallback: Just hide the score box itself if no parent class exists
+                        container.style.display = 'none';
+                    }
+                    return; // Skip rendering and jump to the next score
                 }
 
-                // 3. Otherwise, proceed with rendering
+                // 3. Proceed with rendering active scores
                 const xmlUrl = container.getAttribute('data-musicxml');
 
                 if (xmlUrl) {

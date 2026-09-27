@@ -1,0 +1,39 @@
+<header class="site-header" role="banner">
+    <div class="wrapper"
+        style="display: flex; align-items: center; justify-content: space-between; padding: 10px 15px;">
+
+
+        <!-- Favicon / Site Icon -->
+        <link rel="icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+        <link rel="shortcut icon" type="image/svg+xml" href="{{ '/assets/images/favicon.svg' | relative_url }}">
+
+        <!-- Logo & Title -->
+        <a class="site-title" rel="author" href="{{ '/' | relative_url }}"
+            style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+            <img src="{{ '/assets/images/tstm-logo-wb.png' | relative_url }}" alt="TSTM Logo"
+                style="height: 45px; width: auto;">
+            <span style="font-weight: bold; font-size: 1.2rem; color: #333;">TSTM Music Academy</span>
+        </a>
+
+        <!-- Navigation Menu -->
+        <nav class="site-nav">
+            <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+            <label for="nav-trigger">
+                <span class="menu-icon">
+                    <svg viewBox="0 0 18 15" width="18px" height="15px">
+                        <path
+                            d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,6.033,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.033,18,12.695,18,13.516L18,13.516z" />
+                    </svg>
+                </span>
+            </label>
+
+            <div class="trigger">
+                <a class="page-link" href="{{ '/rockschool/debut' | relative_url }}">RSL Debut</a>
+                <a class="page-link" href="{{ '/rockschool/grade1' | relative_url }}">RSL Grade 1</a>
+                <a class="page-link" href="{{ '/classical/' | relative_url }}">Classical</a>
+                <a class="page-link" href="{{ '/profile/' | relative_url }}">About</a>
+            </div>
+        </nav>
+
+    </div>
+</header>
